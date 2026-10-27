@@ -13,8 +13,8 @@ HMI Pi Role: data aggregation, display, and logging
 
 Sense HAT Pi Role: magnetometer and iw polled 
 
-Remote Storage / Infrastructure Role (NAS Database, MQTT Broker, or SFTP/SCP Server): NAS Database 
+Remote Storage / Infrastructure Role: NAS Database 
 
-Optional Additional Nodes (Other Sandbox Table Pis or PLCs—note table consultation if applicable): two other Sandbox Table Pis (probably from Table 3 and Table 8) 
+Optional Additional Nodes: two other Sandbox Table Pis (probably from Table 3 and Table 8) 
 
-Out-of-Scope Boundaries (List 1–2 features your team is intentionally excluding to ensure completion by Week 15): Features we intend to exclude are creating a web-based application and implementing scalability.
+Out-of-Scope Boundaries: Features we intend to exclude are creating a web-based application and implementing scalability.
