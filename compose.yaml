@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+
+  poller:
+    image: poller:latest
+    configs:
+      - source: nas_config
+        target: /app/config.json
+    secrets:
+      - nas_username
+      - nas_password
+
+  logger:
+    image: logger:latest
+    configs:
+      - source: nas_config
+        target: /app/config.json
+    secrets:
+      - nas_username
+      - nas_password
+
+configs:
+  nas_config:
+    external: true
+
+secrets:
+  nas_username:
+    external: true
+
+  nas_password:
+    external: true
