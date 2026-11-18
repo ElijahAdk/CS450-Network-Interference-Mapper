@@ -1,20 +1,13 @@
 #!/usr/bin/env python3
+import json
 import mysql.connector
 import socket
+import sys
 import time
 from datetime import datetime, timezone
 
-HOST_NAME = "127.0.0.1"  # the hostname of this Logger service's container
+HOST_NAME = "logger"  # the hostname of this Logger service's container
 HOST_PORT = 41000      # the port that the Logger service listens on
-
-# NAS MariaDB Connection Configuration
-DB_CONFIG = {
-    'host': '<NAS_IP>',  # replace with NAS IP address
-    'port': 3306,
-    'database': '<db_name>',  # replace with database name
-    'user': '<db_user>',  # replace with database username
-    'password': '<db_pass>'  # replace with database password
-}
 
 # INSERT query for inserting data values into this Logger service's database table.
 insert_query = """
@@ -22,7 +15,50 @@ insert_query = """
     VALUES (%s, %s, %s, %s, %s, %s)
 """
 
+# Retrieve the NAS MariaDB connection configuration information from the Docker config file and the Docker secrets. We use a Docker config file and Docker secrets to avoid hard-coding the IP address of the NAS, the name of our assigned database, and the log-in credentials needed to access the database (i.e. username and password).
+def get_database_config():
+    # Read the config file to get the NAS IP address and database name.
+    with open("/app/config.json", "r") as f:
+        config = json.load(f)
+    # Check that the config file could be read successfully. If so, check that the stored information was successfully extracted.
+    if not config:
+        print("Config file could not be read.")
+        sys.exit(1)
+    else:
+        if not config["nas_ip"]:
+            print("NAS IP address could not be retrieved from the config file.")
+            sys.exit(1)
+        elif not config["database"]:
+            print("Database name could not be retrieved from the config file.")
+            sys.exit(1)
+
+    # Retrieve the database username and password from Docker secrets.
+    with open("/run/secrets/nas_username", "r") as f:
+        username = f.read().strip()
+    with open("/run/secrets/nas_password", "r") as f:
+        password = f.read().strip()
+
+    # Check that the username and password were successfully retrieved from the Docker secrets.
+    if not username:
+        print("Database username could not be found.")
+        sys.exit(1)
+    elif not password:
+        print("Database password could not be found.")
+        sys.exit(1)
+
+    # Return a dictionary object containing the retrieved information.
+    return {
+        "host": config["nas_ip"],
+        "port": 3306,
+        "database": config["database"],
+        "user": username,
+        "password": password
+    }
+
 def main():
+    # Get the configuration information needed to access the NAS.
+    DB_CONFIG = get_database_config()
+
     # Create and bind a socket to use for communication with the Data Polling service.
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as data_socket:
         data_socket.bind((HOST_NAME, HOST_PORT))
