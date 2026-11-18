@@ -7,10 +7,10 @@ import time
 from sense_hat import SenseHat
 
 # --- Constants ---
-LOGGER_NAME = "127.0.0.1"  # the Logger service's hostname in the Docker network
+LOGGER_NAME = "logger"  # the Logger service's hostname in the Docker network
 LOGGER_PORT = 41000      # the port that the Logger service is listening to
 POLL_INTERVAL = 5.0      # the desired number of seconds between data-polling cycles
-# POLL_INTERVAL is used to ensure that data is collected in a consistent, periodic manner without flooding the network with data and database PUSH requests.
+# POLL_INTERVAL is used to ensure that data is collected in a consistent, periodic manner without flooding the network with data and database INSERT requests.
 
 def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as data_stream:
