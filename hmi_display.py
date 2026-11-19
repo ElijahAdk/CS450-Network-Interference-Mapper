@@ -149,7 +149,7 @@ def main():
                 print(f"Error: {error}")
 
             finally:
-                if connection is not None and connection.is_connected():
+                if connection and connection.is_connected():
                     connection.close()
 
             time.sleep(poll_interval)
