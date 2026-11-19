@@ -55,6 +55,7 @@ def get_database_config():
         "user": username,
         "password": password
     }
+    
 # Connect to the NAS using configuration information.
 class NASConnection:
 
@@ -72,6 +73,7 @@ nas = NASConnection()
 # Ask database tables for # of new entries based on records_to_display.
 def request_sensor_data(connection):
     results = {}
+    
     # Query each sensor table for the newest records.
     for table in sensor_tables:
         try:
@@ -103,6 +105,7 @@ def display_table(results):
         # For each table.
         print("\n")
         print(f"Data from: {table}")
+        
         # Column headers
         print(
             f"{'Timestamp':<25}"
@@ -117,8 +120,10 @@ def display_table(results):
         if not records:
             print("No records available.")
             continue
+            
         # For each entry in the table.
         for record in records:
+            
             # Entries
             print(
                 f"{str(record['timestamp']):<25}"
@@ -135,26 +140,32 @@ def display_table(results):
     print(f"Refreshing in {poll_interval} seconds...")
 
 def main():
+    
     # Indicates that hmi_display.py is running.
     print("Starting Monitoring System...")
 
     try:
         while True:
+            
             # Connect to NAS, poll data from tables, then display results.
             try:
                 connection = nas.connect()
                 results = request_sensor_data(connection)
                 display_table(results)
+                
             # Uh oh, problem happened.
             except (Error, OSError, RuntimeError) as error:
                 print("\nUnable to communicate with NAS.")
                 print(f"Error: {error}")
+                
             # Make sure that connection done gets closed.
             finally:
                 if connection and connection.is_connected():
                     connection.close()
+                    
             # Wait for poll_interval seconds before running again.
             time.sleep(poll_interval)
+            
     # If User presses Ctrl + C, stop the process.
     except KeyboardInterrupt:
         print("\n Shutting down Monitoring System...")
