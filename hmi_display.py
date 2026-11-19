@@ -121,10 +121,10 @@ def display_table(results):
             print(
                 f"{str(record['timestamp']):<25}"
                 f"{str(record['link_quality']):<16}"
-                f"{str(record['signal_level']):<16}" + "dBm"
-                f"{str(record['magnet_x']):<15}" + "uT"
-                f"{str(record['magnet_y']):<15}" + "uT"
-                f"{str(record['magnet_z']):<15}" + "uT"
+                f"{str(record['signal_level'] + + 'dBm'):<16}" 
+                f"{str(record['magnet_x'] + 'uT'):<15}" 
+                f"{str(record['magnet_y'] + 'uT'):<15}"
+                f"{str(record['magnet_z'] + 'uT'):<15}"
             )
         print(f"\n" + "=" * 105)
 
