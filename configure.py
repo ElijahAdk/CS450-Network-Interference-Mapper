@@ -11,11 +11,12 @@ def create_docker_config(name, data):
         subprocess.run(["docker", "config", "create", name, "-"], input=data, text=True, capture_output=True, check=True)
     except subprocess.CalledProcessError as e:
         # If the "docker config create" command failed due to the config file already existing, then we can just use the existing config file.
-        if b"AlreadyExists" in e.stderr:
+        if ("AlreadyExists" in e.stderr) or ("code = 2" in e.stderr):
             print("Config already exists, skipping creation.")
         # Otherwise, if the failure was due to something else, then we need to abort the configuration and deployment of the Swarm.
         else:
-            print("There was a problem creating the config file:\n{e.stderr}")
+            print("There was a problem creating the config file:")
+            print(e.stderr)
             sys.exit(1)
 
 # This function creates a Docker Secret to store sensitive information. For this project, we use two secrets to store the username and password needed to access our assigned database.
@@ -24,11 +25,12 @@ def create_docker_secret(name, value):
         subprocess.run(["docker", "secret", "create", name, "-"], input=value, text=True, check=True)
     except subprocess.CalledProcessError as e:
         # If the "docker secret create" command failed due to the secret already existing, then we can just use the existing secret.
-        if b"AlreadyExists" in e.stderr:
+        if ("AlreadyExists" in e.stderr) or ("code = 2" in e.stderr):
             print("Secret already exists, skipping creation.")
         # Otherwise, if the failure was due to something else, then we need to abort the configuration and deployment of the Swarm.
         else:
-            print("There was a problem creating a secret:\n{e.stderr}")
+            print("There was a problem creating the config file:")
+            print(e.stderr)
             sys.exit(1)
 
 
