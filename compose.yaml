@@ -20,6 +20,17 @@ services:
       - nas_username
       - nas_password
 
+  hmi_display:
+    image: hmi_display:latest
+    configs:
+      - source: nas_config
+        target: /app/config.json
+    secrets:
+      - nas_username
+      - nas_password
+    stdin_open: true
+    tty: true
+
 configs:
   nas_config:
     external: true
